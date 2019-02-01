@@ -67,7 +67,7 @@ function get_last_20_songs() {
 	// await MyRedis.init();
 	// await sleep( 1000 );
 
-	setTimeout( function() {
+	setInterval( function() {
 		console.log( "Getting Latest Songs" );
 		get_last_20_songs();
 	} , 600000 );
