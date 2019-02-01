@@ -62,15 +62,15 @@ function get_last_20_songs() {
 
 ( async ()=> {
 
-	MyOBJ_DB = new JFODB( "wswo_playlist_archive" );
+	MyOBJ_DB = new JFODB( "wswo_playlist_archive_0" );
 	// MyRedis = new RMU( 3 );
 	// await MyRedis.init();
 	// await sleep( 1000 );
 
-	// setTimeout( function() {
-	// 	console.log( "Getting Latest Songs" );
-	// 	get_last_20_songs();
-	// } , 600000 );
+	setTimeout( function() {
+		console.log( "Getting Latest Songs" );
+		get_last_20_songs();
+	} , 600000 );
 
-	await get_last_20_songs();
+	//await get_last_20_songs();
 })();
