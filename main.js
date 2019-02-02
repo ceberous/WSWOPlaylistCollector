@@ -62,6 +62,10 @@ function get_last_20_songs() {
 ( async ()=> {
 
 	MyOBJ_DB = new JFODB( "wswo_playlist_archive_0" );
+	if ( !MyOBJ_DB[ "self" ][ "songs" ] ) {
+		MyOBJ_DB[ "self" ][ "songs" ] = {};
+		MyOBJ_DB.save();
+	}
 	// MyRedis = new RMU( 3 );
 	// await MyRedis.init();
 	// await sleep( 1000 );
