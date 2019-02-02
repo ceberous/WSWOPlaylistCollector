@@ -16,6 +16,7 @@ const R_Key = "WSWO.SONGS";
 const sleep = require( "./generic_utils.js" ).sleep;
 const MAKE_REQUEST = require( "./generic_utils.js" ).makeRequest;
 //const YOUTUBE = require( "./youtube_utils.js" );
+//const SPOTIFY = require( "./spotify_utils.js" );
 //const MAKE_REQUEST = require( "./generic_utils.js" ).makeRequestWithPuppeteer;
 
 
@@ -53,6 +54,7 @@ function get_last_20_songs() {
 					result.search_string = track_info[ 1 ] + " " + track_info[ 2 ] + " " + track_info[ 3 ];
 					//latest.push( result );
 					//await YOUTUBE.addToPlaylist( result.search_string );
+					//await SPOTIFY.addToPlaylist( result.title , result.artist );
 					console.log( result )
 				}
 			}
