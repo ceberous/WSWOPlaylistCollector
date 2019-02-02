@@ -14,7 +14,9 @@ const RMU = require( "redis-manager-utils" );
 var MyRedis = null;
 const sleep = require( "./generic_utils.js" ).sleep;
 const MAKE_REQUEST = require( "./generic_utils.js" ).makeRequest;
+const YOUTUBE = require( "./youtube_utils.js" );
 //const MAKE_REQUEST = require( "./generic_utils.js" ).makeRequestWithPuppeteer;
+
 
 //const wswo_url = "http://daytonoldies.org/";
 const wswo_url = "http://radio.securenetsystems.net/songdata/v5/index.cfm?stationCallSign=WSWO-LP";
@@ -29,7 +31,7 @@ function get_last_20_songs() {
 			let main_container = $( "#makeMeScrollable" );
 			let songs = $( main_container ).children();
 
-			//let latest = [];
+			let latest = [];
 			for ( let i = 0; i < songs.length; ++i ) {
 				let track_container = $( songs[ i ] ).children();
 				let track_info = $( track_container[ 0 ] ).children().text();
@@ -37,21 +39,18 @@ function get_last_20_songs() {
 				track_info = track_info.map( x => x.replace( /\t/g , "" ) );
 				track_info.shift();
 				track_info.pop();
-				// let song = {};
-				// if ( track_info[ 0 ] ) { song[ "time_stamp" ] = track_info[ 0 ]; }
-				// if ( track_info[ 1 ] ) { song[ "track_info" ] = track_info[ 1 ]; }
-				// if ( track_info[ 2 ] ) { song[ "artist" ] = track_info[ 2 ]; }
-				// if ( track_info[ 3 ] ) { song[ "album" ] = track_info[ 3 ]; }
 				let db_id = track_info[ 1 ] + "---" + track_info[ 2 ] + "---" + track_info[ 3 ];
 				let a1 = new Buffer.from( db_id );
 				a1 = a1.toString( "base64" );
-				if ( !MyOBJ_DB[ "self" ][ a1 ] ) {
-					MyOBJ_DB[ "self" ][ a1 ] = { title: track_info[ 1 ] , artist: track_info[ 2 ] , album: track_info[ 3 ] };
-				}
-				//latest.push( { id: a1 , time_stamp: track_info[ 0 ] , title: track_info[ 1 ] , artist: track_info[ 2 ] , album: track_info[ 3 ] } );
+				let result = { title: track_info[ 1 ] , artist: track_info[ 2 ] , album: track_info[ 3 ] };
+				if ( MyOBJ_DB[ "self" ][ "songs" ][ a1 ] ) { continue; }
+				MyOBJ_DB[ "self" ][ "songs" ][ a1 ] = result;
+				result.id = a1;
+				result.search_string = track_info[ 1 ] + " " + track_info[ 2 ] + " " + track_info[ 3 ];
+				latest.push( result );
+				//await YOUTUBE.addToPlaylist( result.search_string );
 			}
-			//console.log( latest );
-
+			console.log( latest );
 			MyOBJ_DB.save();
 
 			resolve();
