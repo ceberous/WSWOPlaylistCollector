@@ -67,16 +67,17 @@ function get_last_20_songs() {
 
 ( async ()=> {
 
-	MyOBJ_DB = new JFODB( "wswo_playlist_archive_0" );
-	if ( !MyOBJ_DB[ "self" ][ "songs" ] ) {
-		MyOBJ_DB[ "self" ][ "songs" ] = {};
-		MyOBJ_DB.save();
-	}
+	// MyOBJ_DB = new JFODB( "wswo_playlist_archive_0" );
+	// if ( !MyOBJ_DB[ "self" ][ "songs" ] ) {
+	// 	MyOBJ_DB[ "self" ][ "songs" ] = {};
+	// 	MyOBJ_DB.save();
+	// }
 	MyRedis = new RMU( 3 );
 	await MyRedis.init();
 	await sleep( 1000 );
 
 	console.log( "WSWO Playlist Collector Restarted" );
+	get_last_20_songs();
 
 	setInterval( function() {
 		console.log( "Getting Latest Songs" );
