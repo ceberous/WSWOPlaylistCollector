@@ -57,7 +57,7 @@ function get_last_20_songs() {
 				}
 			}
 			//console.log( latest );
-			MyOBJ_DB.save();
+			//MyOBJ_DB.save();
 
 			resolve();
 		}
