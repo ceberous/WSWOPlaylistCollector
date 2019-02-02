@@ -43,7 +43,7 @@ function get_last_20_songs() {
 				let a1 = new Buffer.from( db_id );
 				a1 = a1.toString( "base64" );
 				let result = { title: track_info[ 1 ] , artist: track_info[ 2 ] , album: track_info[ 3 ] };
-				if ( MyOBJ_DB[ "self" ][ "songs" ][ a1 ] ) { continue; }
+				if ( MyOBJ_DB[ "self" ][ "songs" ][ a1 ] ) { break; }
 				MyOBJ_DB[ "self" ][ "songs" ][ a1 ] = result;
 				result.id = a1;
 				result.search_string = track_info[ 1 ] + " " + track_info[ 2 ] + " " + track_info[ 3 ];
