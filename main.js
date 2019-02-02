@@ -15,9 +15,9 @@ var MyRedis = null;
 const R_Key = "WSWO.SONGS";
 const sleep = require( "./generic_utils.js" ).sleep;
 const MAKE_REQUEST = require( "./generic_utils.js" ).makeRequest;
+//const MAKE_REQUEST = require( "./generic_utils.js" ).makeRequestWithPuppeteer;
 //const YOUTUBE = require( "./youtube_utils.js" );
 //const SPOTIFY = require( "./spotify_utils.js" );
-//const MAKE_REQUEST = require( "./generic_utils.js" ).makeRequestWithPuppeteer;
 
 
 //const wswo_url = "http://daytonoldies.org/";
@@ -51,16 +51,16 @@ function get_last_20_songs() {
 					await MyRedis.setAdd( R_Key , db_id_b64 );
 					//MyOBJ_DB[ "self" ][ "songs" ][ db_id_b64 ] = result;
 					result.id = db_id_b64;
+					result.time_stamp = track_info[ 0 ];
 					result.search_string = track_info[ 1 ] + " " + track_info[ 2 ] + " " + track_info[ 3 ];
 					//latest.push( result );
 					//await YOUTUBE.addToPlaylist( result.search_string );
 					//await SPOTIFY.addToPlaylist( result.title , result.artist );
-					console.log( result )
+					console.log( result );
 				}
 			}
 			//console.log( latest );
 			//MyOBJ_DB.save();
-
 			resolve();
 		}
 		catch( error ) { console.log( error ); reject( error ); }
@@ -86,5 +86,4 @@ function get_last_20_songs() {
 		get_last_20_songs();
 	} , 600000 );
 
-	//await get_last_20_songs();
 })();
