@@ -13,7 +13,7 @@
     "googleapis": "^37.1.0",
     "jsonfile-obj-db": "^1.0.8",
     "puppeteer": "^1.12.1",
-    "redis-manager-utils": "^1.1.6",
+    "redis-manager-utils": "^1.1.7",
     "request": "^2.88.0",
     "youtube-search": "^1.1.4"
   }

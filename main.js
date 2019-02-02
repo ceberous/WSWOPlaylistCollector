@@ -12,6 +12,7 @@ const JFODB = require( "jsonfile-obj-db" );
 var MyOBJ_DB = null;
 const RMU = require( "redis-manager-utils" );
 var MyRedis = null;
+const R_Key = "WSWO.SONGS";
 const sleep = require( "./generic_utils.js" ).sleep;
 const MAKE_REQUEST = require( "./generic_utils.js" ).makeRequest;
 //const YOUTUBE = require( "./youtube_utils.js" );
@@ -31,7 +32,7 @@ function get_last_20_songs() {
 			let main_container = $( "#makeMeScrollable" );
 			let songs = $( main_container ).children();
 
-			let latest = [];
+			//let latest = [];
 			for ( let i = 0; i < songs.length; ++i ) {
 				let track_container = $( songs[ i ] ).children();
 				let track_info = $( track_container[ 0 ] ).children().text();
@@ -40,17 +41,22 @@ function get_last_20_songs() {
 				track_info.shift();
 				track_info.pop();
 				let db_id = track_info[ 1 ] + "---" + track_info[ 2 ] + "---" + track_info[ 3 ];
-				let a1 = new Buffer.from( db_id );
-				a1 = a1.toString( "base64" );
+				let db_id_b64 = new Buffer.from( db_id );
+				db_id_b64 = db_id_b64.toString( "base64" );
 				let result = { title: track_info[ 1 ] , artist: track_info[ 2 ] , album: track_info[ 3 ] };
-				if ( MyOBJ_DB[ "self" ][ "songs" ][ a1 ] ) { break; }
-				MyOBJ_DB[ "self" ][ "songs" ][ a1 ] = result;
-				result.id = a1;
-				result.search_string = track_info[ 1 ] + " " + track_info[ 2 ] + " " + track_info[ 3 ];
-				latest.push( result );
-				//await YOUTUBE.addToPlaylist( result.search_string );
+				let unique = await MyRedis.setIsMember( R_Key , db_id_b64 );
+				if ( !unique || unique === "false" || unique === "0" ) {
+					console.log( "New Song" );
+					await MyRedis.setAdd( R_Key , db_id_b64 );
+					//MyOBJ_DB[ "self" ][ "songs" ][ db_id_b64 ] = result;
+					result.id = db_id_b64;
+					result.search_string = track_info[ 1 ] + " " + track_info[ 2 ] + " " + track_info[ 3 ];
+					//latest.push( result );
+					//await YOUTUBE.addToPlaylist( result.search_string );
+					console.log( result )
+				}
 			}
-			console.log( latest );
+			//console.log( latest );
 			MyOBJ_DB.save();
 
 			resolve();
@@ -66,9 +72,11 @@ function get_last_20_songs() {
 		MyOBJ_DB[ "self" ][ "songs" ] = {};
 		MyOBJ_DB.save();
 	}
-	// MyRedis = new RMU( 3 );
-	// await MyRedis.init();
-	// await sleep( 1000 );
+	MyRedis = new RMU( 3 );
+	await MyRedis.init();
+	await sleep( 1000 );
+
+	console.log( "WSWO Playlist Collector Restarted" );
 
 	setInterval( function() {
 		console.log( "Getting Latest Songs" );
